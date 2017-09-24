@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using System.IO;
-using System.Text;
 
 namespace OwinHttpTracker
 {
@@ -12,7 +10,7 @@ namespace OwinHttpTracker
         /// <summary>
         /// A custom HTTP header to detect when the middleware is active, and to correlate a request with its emitted event.
         /// </summary>
-        private const string TrackingHeader = "x-http-tracker-id";
+        public const string TrackingHeader = "x-http-tracker-id";
 
         /// <summary>
         /// Maximum size, in characters, of the request to record
