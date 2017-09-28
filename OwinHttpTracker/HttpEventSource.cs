@@ -15,27 +15,21 @@ namespace OwinHttpTracker
 
         #region Events
         [Event(1, Message = "Owin Http Event {0} {1}", Level = EventLevel.Informational, Version = 1)]
-        public void EmitEvent(HttpEvent httpEvent)
+        public void EmitEvent(string trackingId, string serializedEvent)
         {
-            string trackingId = httpEvent.TrackingId.ToString(("d"));
-            string serializedEvent = JsonConvert.SerializeObject(httpEvent);
-            WriteEvent(101, trackingId, serializedEvent);
+            WriteEvent(1, trackingId, serializedEvent);
         }
 
         [Event(2, Message = "Owin Http Request {0} {1}", Level = EventLevel.Verbose, Version = 1)]
-        public void EmitRequest(HttpEvent httpEvent)
+        public void EmitRequest(string trackingId, string request)
         {
-            string trackingId = httpEvent.TrackingId.ToString(("d"));
-            string request = httpEvent.Request;
-            WriteEvent(101, trackingId, request);
+            WriteEvent(2, trackingId, request);
         }
 
         [Event(3, Message = "Owin Http Response {0} {1}", Level = EventLevel.Verbose, Version = 1)]
-        public void EmitResponse(HttpEvent httpEvent)
+        public void EmitResponse(string trackingId, string response)
         {
-            string trackingId = httpEvent.TrackingId.ToString(("d"));
-            string response = httpEvent.Response;
-            WriteEvent(101, trackingId, response);
+            WriteEvent(3, trackingId, response);
         }
         #endregion
     }

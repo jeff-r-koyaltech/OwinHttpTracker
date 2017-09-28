@@ -51,6 +51,18 @@ namespace OwinHttpTracker
         [DataMember]
         public IHeaderDictionary ResponseHeaders { get; set; }
 
+        public static bool IsText(string contentTypeHeader)
+        {
+            var contentType = new System.Net.Mime.ContentType(contentTypeHeader);
+            var mediaType = contentType.MediaType;
+
+            return (
+                mediaType.StartsWith("text/") ||
+                mediaType.EndsWith("/json") ||
+                mediaType.EndsWith("/xml")
+            );
+        }
+
         [DataMember]
         public bool EntireRequest { get; set; }
 

@@ -62,5 +62,18 @@ namespace OwnHttpTracker.Tests
                 observedStream.Length.ShouldBeEquivalentTo(input.Length);
             }
         }
+
+        [Theory]
+        [InlineData("application/json")]
+        [InlineData("application/xml")]
+        [InlineData("text/xml")]
+        [InlineData("text/plain")]
+        [InlineData("text/css")]
+        [InlineData("text/csv")]
+        [InlineData("text/html")]
+        public void ShouldDetectTextMimeTypes(string contentType)
+        {
+            HttpEvent.IsText(contentType).Should().BeTrue();
+        }
     }
 }

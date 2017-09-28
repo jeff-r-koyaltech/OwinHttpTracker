@@ -2,11 +2,14 @@
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using System.IO;
+using System.Text;
 
 namespace OwinHttpTracker
 {
     public class OwinHttpTracker : OwinMiddleware
     {
+        private const string ContentTypeHeader = "Content-Type";
+
         /// <summary>
         /// A custom HTTP header to detect when the middleware is active, and to correlate a request with its emitted event.
         /// </summary>
@@ -55,12 +58,19 @@ namespace OwinHttpTracker
             SetEventRequestHeaders(request, httpEvent);
             httpEvent.RequestLength = requestStream.LogContentLength;
             var reqBytes = await requestStream.ReadLogAsync();
-            httpEvent.Request = Convert.ToBase64String(reqBytes);
+            if (httpEvent.RequestHeaders.ContainsKey(ContentTypeHeader) && HttpEvent.IsText(httpEvent.RequestHeaders[ContentTypeHeader]))
+                httpEvent.Request = Encoding.UTF8.GetString(reqBytes);
+            else
+                httpEvent.Request = Convert.ToBase64String(reqBytes);
 
             SetEventResponseHeaders(response, httpEvent);
             httpEvent.ResponseLength = responseStream.LogContentLength;
             var respBytes = await responseStream.ReadLogAsync();
-            httpEvent.Response = Convert.ToBase64String(respBytes);
+
+            if (httpEvent.ResponseHeaders.ContainsKey(ContentTypeHeader) && HttpEvent.IsText(httpEvent.ResponseHeaders[ContentTypeHeader]))
+                httpEvent.Response = Encoding.UTF8.GetString(respBytes);
+            else
+                httpEvent.Response = Convert.ToBase64String(respBytes);
 
             _tracker.EmitEvent(httpEvent);
         }
